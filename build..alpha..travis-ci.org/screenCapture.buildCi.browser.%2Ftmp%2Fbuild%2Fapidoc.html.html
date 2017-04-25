@@ -68,6 +68,12 @@
 
         <li>
 
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gitbook-cli.</span>index</span>
+
+        </li>
+
+        <li>
+
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gitbook-cli.</span>local</span>
 
         </li>
@@ -143,6 +149,127 @@
         <li>
 
             <span class="apidocSignatureSpan">string <span class="apidocSignatureSpan">gitbook-cli.config.</span>VERSIONS_ROOT</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gitbook-cli.index">module gitbook-cli.index</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.available">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>available
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.ensure">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>ensure
+            <span class="apidocSignatureSpan">(bookRoot, version, opts)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.ensureAndLoad">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>ensureAndLoad
+            <span class="apidocSignatureSpan">(bookRoot, version, opts)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.get">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>get
+            <span class="apidocSignatureSpan">(bookRoot, version)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.getBookVersion">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>getBookVersion
+            <span class="apidocSignatureSpan">(bookRoot)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.init">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>init
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.install">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>install
+            <span class="apidocSignatureSpan">(version, forceInstall)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.link">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>link
+            <span class="apidocSignatureSpan">(name, folder)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.load">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>load
+            <span class="apidocSignatureSpan">(version)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.setRoot">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>setRoot
+            <span class="apidocSignatureSpan">(root)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.uninstall">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>uninstall
+            <span class="apidocSignatureSpan">(version)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.update">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>update
+            <span class="apidocSignatureSpan">(tag)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gitbook-cli.index.versions">
+            function <span class="apidocSignatureSpan">gitbook-cli.index.</span>versions
+            <span class="apidocSignatureSpan">()</span>
+            </a>
 
         </li>
 
@@ -292,6 +419,8 @@
 
 
 
+
+
 </div>
 
 <div class="apidocSectionDiv">
@@ -423,6 +552,448 @@ module.exports = {
 </div>
 
 <div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gitbook-cli.index" id="apidoc.module.gitbook-cli.index">module gitbook-cli.index</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.available" id="apidoc.element.gitbook-cli.index.available">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>available
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function availableVersions() {
+    return initNPM()
+    .then(function() {
+        return Q.nfcall(npm.commands.view, ['gitbook', 'versions', 'dist-tags'], true);
+    })
+    .then(function(result) {
+        result = _.chain(result).values().first().value();
+        result = {
+            versions: _.chain(result.versions)
+                .filter(function(v) {
+                    return tags.isValid(v);
+                })
+                .sort(tags.sort)
+                .value(),
+            tags: _.chain(result['dist-tags'])
+                .omit(function(tagVersion, tagName) {
+                    return !tags.isValid(tagVersion);
+                })
+                .value()
+        };
+
+        if (result.versions.length == 0) throw new Error('No valid version on the NPM registry');
+        return result;
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.ensure" id="apidoc.element.gitbook-cli.index.ensure">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>ensure
+        <span class="apidocSignatureSpan">(bookRoot, version, opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function ensureVersion(bookRoot, version, opts) {
+    opts = _.defaults(opts || {}, {
+        install: true
+    });
+
+    return Q()
+
+    // If not defined, load version required from book.json
+    .then(function() {
+        if (version) return version;
+        return bookVersion(bookRoot);
+    })
+
+    // Resolve version locally
+    .then(function(_version) {
+        version = _version;
+        return local.resolve(version)
+        // Install if needed
+        .fail(function(err) {
+            if (!opts.install) throw err;
+
+            return registry.install(version)
+            .then(function() {
+                return ensureVersion(bookRoot, version, {
+                    install: false
+                });
+            });
+        });
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.ensureAndLoad" id="apidoc.element.gitbook-cli.index.ensureAndLoad">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>ensureAndLoad
+        <span class="apidocSignatureSpan">(bookRoot, version, opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function ensureAndLoad(bookRoot, version, opts) {
+    return ensureVersion(bookRoot, version, opts)
+    .then(function(version) {
+        return local.load(version);
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.get" id="apidoc.element.gitbook-cli.index.get">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>get
+        <span class="apidocSignatureSpan">(bookRoot, version)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function getVersion(bookRoot, version) {
+    return ensureVersion(bookRoot, version, {
+        install: false
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.getBookVersion" id="apidoc.element.gitbook-cli.index.getBookVersion">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>getBookVersion
+        <span class="apidocSignatureSpan">(bookRoot)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function bookVersion(bookRoot) {
+    var version;
+
+    try {
+        var bookJson = require(path.resolve(bookRoot, 'book'));
+        version = bookJson.gitbook;
+    } catch (e) {
+        if (e.code != 'MODULE_NOT_FOUND') throw e;
+    }
+
+    return version || '*';
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.init" id="apidoc.element.gitbook-cli.index.init">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>init
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function init() {
+    fs.mkdirsSync(CONFIG_ROOT);
+    fs.mkdirsSync(VERSIONS_ROOT);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.install" id="apidoc.element.gitbook-cli.index.install">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>install
+        <span class="apidocSignatureSpan">(version, forceInstall)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function installVersion(version, forceInstall) {
+    return resolveVersion(version)
+    .then(function(_version) {
+        version = _version;
+        return Q.nfcall(tmp.dir.bind(tmp));
+    })
+    .spread(function(tmpDir) {
+        var options = {
+            name: 'gitbook',
+            version: version,
+            path: tmpDir,
+            forceInstall: !!forceInstall,
+            npmLoad: {
+                loglevel: 'silent',
+                loaded: false,
+                prefix: tmpDir
+            }
+        };
+        console.log('Installing GitBook', version);
+        return Q.nfcall(npmi.bind(npmi), options).thenResolve(tmpDir);
+    })
+    .then(function(tmpDir) {
+        var gitbookRoot = path.resolve(tmpDir, 'node_modules/gitbook');
+        var packageJson = fs.readJsonSync(path.resolve(gitbookRoot, 'package.json'));
+        var version = packageJson.version;
+
+        var outputFolder = path.resolve(config.VERSIONS_ROOT, version);
+
+        if (!tags.isValid(version)) throw 'Invalid GitBook version, should satisfies '+config.GITBOOK_VERSION;
+
+        // Copy to the install folder
+        return Q.nfcall(fs.copy.bind(fs), gitbookRoot, outputFolder)
+        .thenResolve(version);
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+.then(function(_version) {
+    version = _version;
+    return local.resolve(version)
+    // Install if needed
+    .fail(function(err) {
+        if (!opts.install) throw err;
+
+        return registry.<span class="apidocCodeKeywordSpan">install</span>(version)
+        .then(function() {
+            return ensureVersion(bookRoot, version, {
+                install: false
+            });
+        });
+    });
+});
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.link" id="apidoc.element.gitbook-cli.index.link">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>link
+        <span class="apidocSignatureSpan">(name, folder)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function linkVersion(name, folder) {
+    if (!name) return Q.reject(new Error('Require a name to represent this GitBook version'));
+    if (!folder) return Q.reject(new Error('Require a folder'));
+    var outputFolder = versionRoot(name);
+
+    return Q.nfcall(fs.symlink.bind(fs), folder, outputFolder);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.load" id="apidoc.element.gitbook-cli.index.load">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>load
+        <span class="apidocSignatureSpan">(version)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function loadVersion(version) {
+    return Q(_.isString(version)? resolveVersion(version) : version)
+    .then(function(resolved) {
+        var gitbook;
+
+        try {
+            gitbook = require(resolved.path);
+        } catch (err) {
+            console.log(color.red('Error loading version '+resolved.tag+': '+(err.stack || err.message || err)));
+            return null;
+        }
+
+        if (!gitbook) throw new Error('GitBook Version '+resolved.tag+' is corrupted');
+        return gitbook;
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+}
+
+// Ensure a version exists (or install it)
+// Then load it and returns the gitbook instance
+function ensureAndLoad(bookRoot, version, opts) {
+    return ensureVersion(bookRoot, version, opts)
+    .then(function(version) {
+        return local.<span class="apidocCodeKeywordSpan">load</span>(version);
+    });
+}
+
+// Update current version
+//   -&gt; Check that a newer version exists
+//   -&gt; Install it
+//   -&gt; Remove previous version
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.setRoot" id="apidoc.element.gitbook-cli.index.setRoot">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>setRoot
+        <span class="apidocSignatureSpan">(root)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function setRoot(root) {
+    CONFIG_ROOT = path.resolve(root);
+    VERSIONS_ROOT = path.resolve(CONFIG_ROOT, 'versions');
+
+    module.exports.ROOT = CONFIG_ROOT;
+    module.exports.VERSIONS_ROOT = VERSIONS_ROOT;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.uninstall" id="apidoc.element.gitbook-cli.index.uninstall">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>uninstall
+        <span class="apidocSignatureSpan">(version)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function removeVersion(version) {
+    if (!version) return Q.reject(new Error('No version specified'));
+    var outputFolder = versionRoot(version);
+
+    return Q.nfcall(fs.lstat.bind(fs), outputFolder)
+    .then(function(stat) {
+        if (stat.isSymbolicLink()) {
+            return Q.nfcall(fs.unlink.bind(fs), outputFolder);
+        }
+        return Q.nfcall(fs.remove.bind(fs), outputFolder);
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.update" id="apidoc.element.gitbook-cli.index.update">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>update
+        <span class="apidocSignatureSpan">(tag)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function updateVersion(tag) {
+    tag = tag || 'latest';
+
+    return getVersion(null, {
+        install: false
+    })
+    .fail(function(err) {
+        return Q(null);
+    })
+    .then(function(currentV) {
+        return registry.versions()
+        .then(function(result) {
+            var remoteVersion = result.tags[tag];
+            if (!remoteVersion) throw new Error('Tag doesn\'t exist: '+tag);
+
+            if (currentV &amp;&amp; tags.sort(remoteVersion, currentV.version) &gt;= 0) return null;
+
+            return registry.install(remoteVersion)
+            .then(function() {
+                if (!currentV) return;
+                return local.remove(currentV.tag);
+            })
+            .thenResolve(remoteVersion);
+        });
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gitbook-cli.index.versions" id="apidoc.element.gitbook-cli.index.versions">
+        function <span class="apidocSignatureSpan">gitbook-cli.index.</span>versions
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function listVersions() {
+    var folders = fs.readdirSync(config.VERSIONS_ROOT);
+    var latest = null;
+
+    return _.chain(folders)
+        .map(function(tag) {
+            // Verison matches requirements?
+            if (!tags.isValid(tag)) return null;
+
+            // Read package.json to determine version
+            var versionFolder = path.resolve(config.VERSIONS_ROOT, tag);
+            var stat = fs.lstatSync(versionFolder);
+            var pkg;
+
+            try {
+                pkg = require(path.resolve(versionFolder, 'package.json'));
+            } catch(e) {
+                return null;
+            }
+
+            // Is it gitbook?
+            if (pkg.name != 'gitbook') return null;
+
+            return {
+                // The name associated in the folder
+                name: tag,
+
+                // The real absolute version
+                version: pkg.version,
+
+                // Location of this version
+                path: versionFolder,
+
+                // Location if it's a symlink
+                link: stat.isSymbolicLink()? fs.readlinkSync(versionFolder) : null,
+
+                // Type of release, latest, beta, etc ?
+                tag: tags.getTag(pkg.version)
+            };
+        })
+        .compact()
+
+        // Sort by the version
+        .sort(function(a, b) {
+            return tags.sort(a.version, b.version);
+        })
+        .value();
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    return getVersion(null, {
+        install: false
+    })
+    .fail(function(err) {
+        return Q(null);
+    })
+    .then(function(currentV) {
+        return registry.<span class="apidocCodeKeywordSpan">versions</span>()
+        .then(function(result) {
+var remoteVersion = result.tags[tag];
+if (!remoteVersion) throw new Error('Tag doesn\'t exist: '+tag);
+
+if (currentV &amp;&amp; tags.sort(remoteVersion, currentV.version) &gt;= 0) return null;
+
+return registry.install(remoteVersion)
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.gitbook-cli.local" id="apidoc.module.gitbook-cli.local">module gitbook-cli.local</a></h1>
 
 
@@ -468,7 +1039,23 @@ module.exports = {
         return gitbook;
     });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+}
+
+// Ensure a version exists (or install it)
+// Then load it and returns the gitbook instance
+function ensureAndLoad(bookRoot, version, opts) {
+    return ensureVersion(bookRoot, version, opts)
+    .then(function(version) {
+        return local.<span class="apidocCodeKeywordSpan">load</span>(version);
+    });
+}
+
+// Update current version
+//   -&gt; Check that a newer version exists
+//   -&gt; Install it
+//   -&gt; Remove previous version
+...</pre></li>
     </ul>
 
 
@@ -492,7 +1079,23 @@ module.exports = {
         return Q.nfcall(fs.remove.bind(fs), outputFolder);
     });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+            if (!remoteVersion) throw new Error('Tag doesn\'t exist: '+tag);
+
+            if (currentV &amp;&amp; tags.sort(remoteVersion, currentV.version) &gt;= 0) return null;
+
+            return registry.install(remoteVersion)
+            .then(function() {
+                if (!currentV) return;
+                return local.<span class="apidocCodeKeywordSpan">remove</span>(currentV.tag);
+            })
+            .thenResolve(remoteVersion);
+        });
+    });
+}
+
+module.exports = {
+...</pre></li>
     </ul>
 
 
@@ -591,7 +1194,23 @@ function init() {
         })
         .value();
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    return getVersion(null, {
+        install: false
+    })
+    .fail(function(err) {
+        return Q(null);
+    })
+    .then(function(currentV) {
+        return registry.<span class="apidocCodeKeywordSpan">versions</span>()
+        .then(function(result) {
+var remoteVersion = result.tags[tag];
+if (!remoteVersion) throw new Error('Tag doesn\'t exist: '+tag);
+
+if (currentV &amp;&amp; tags.sort(remoteVersion, currentV.version) &gt;= 0) return null;
+
+return registry.install(remoteVersion)
+...</pre></li>
     </ul>
 
 
@@ -643,7 +1262,23 @@ function init() {
         .thenResolve(version);
     });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+.then(function(_version) {
+    version = _version;
+    return local.resolve(version)
+    // Install if needed
+    .fail(function(err) {
+        if (!opts.install) throw err;
+
+        return registry.<span class="apidocCodeKeywordSpan">install</span>(version)
+        .then(function() {
+            return ensureVersion(bookRoot, version, {
+                install: false
+            });
+        });
+    });
+});
+...</pre></li>
     </ul>
 
 
@@ -728,7 +1363,23 @@ function init() {
         return result;
     });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    return getVersion(null, {
+        install: false
+    })
+    .fail(function(err) {
+        return Q(null);
+    })
+    .then(function(currentV) {
+        return registry.<span class="apidocCodeKeywordSpan">versions</span>()
+        .then(function(result) {
+var remoteVersion = result.tags[tag];
+if (!remoteVersion) throw new Error('Tag doesn\'t exist: '+tag);
+
+if (currentV &amp;&amp; tags.sort(remoteVersion, currentV.version) &gt;= 0) return null;
+
+return registry.install(remoteVersion)
+...</pre></li>
     </ul>
 
 
@@ -899,21 +1550,22 @@ function resolveVersion(condition) {
     return 0;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-                // Type of release, latest, beta, etc ?
-                tag: tags.getTag(pkg.version)
-            };
-        })
-        .compact()
+    })
+    .then(function(currentV) {
+        return registry.versions()
+        .then(function(result) {
+var remoteVersion = result.tags[tag];
+if (!remoteVersion) throw new Error('Tag doesn\'t exist: '+tag);
 
-        // Sort by the version
-        .<span class="apidocCodeKeywordSpan">sort</span>(function(a, b) {
-            return tags.sort(a.version, b.version);
-        })
-        .value();
-}
+if (currentV &amp;&amp; tags.<span class="apidocCodeKeywordSpan">sort</span>(remoteVersion, currentV.version) &gt;= 0) return
+ null;
 
-// Return path to a specific version
-function versionRoot(version) {
+return registry.install(remoteVersion)
+.then(function() {
+    if (!currentV) return;
+    return local.remove(currentV.tag);
+})
+.thenResolve(remoteVersion);
 ...</pre></li>
     </ul>
 
