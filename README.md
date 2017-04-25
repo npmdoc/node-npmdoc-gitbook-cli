@@ -1,6 +1,6 @@
 # npmdoc-gitbook-cli
 
-#### api documentation for  [gitbook-cli (v2.3.0)](https://www.gitbook.com)  [![npm package](https://img.shields.io/npm/v/npmdoc-gitbook-cli.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gitbook-cli) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gitbook-cli.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gitbook-cli)
+#### basic api documentation for  [gitbook-cli (v2.3.0)](https://www.gitbook.com)  [![npm package](https://img.shields.io/npm/v/npmdoc-gitbook-cli.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gitbook-cli) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gitbook-cli.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gitbook-cli)
 
 #### CLI to generate books and documentation using gitbook
 
